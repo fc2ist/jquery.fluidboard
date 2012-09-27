@@ -102,9 +102,6 @@
       n = Math.floor(len/c.colnum)
       d = len % c.colnum
       offset = getPaddingLeftTop(c._target)
-
-      console.log(c._colHeights)
-
       c._items.each( (index)->
         colIndex = index % c.colnum
         colCurrentHeight[ colIndex ] = colCurrentHeight[ colIndex ] || 0
