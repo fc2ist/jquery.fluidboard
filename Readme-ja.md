@@ -45,14 +45,12 @@ $('.container').fluidboard(options);
 ###破棄
 
 ~~~~~
--
 $('.container').fluidboard('destroy');
 ~~~~~
 
 ###更新
 
 ~~~~~
--
 $('.container').fluidboard('reload');
 ~~~~~
 
