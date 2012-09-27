@@ -151,7 +151,6 @@
       n = Math.floor(len / c.colnum);
       d = len % c.colnum;
       offset = getPaddingLeftTop(c._target);
-      console.log(c._colHeights);
       c._items.each(function(index) {
         var clone, cn, colIndex, diff, item, left, style, _k;
         colIndex = index % c.colnum;
