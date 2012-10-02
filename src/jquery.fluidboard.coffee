@@ -6,6 +6,12 @@
     resize: true,
     gutter: 10,
     throttle: 5,
+    className: {
+      edgeTop: 'edge-top',
+      edgeLeft: 'edge-left',
+      edgeRight: 'edge-right',
+      edgeBottom: 'edge-bottom'
+    },
     isAnimated: false,
     animationOptions: {
       duration: 200,
@@ -80,6 +86,7 @@
       c._target.off( 'resize.fluidboard' )
 
     attach = ->
+      self = @
       c = @config
       c._target.css('position', 'relative')
       c._clones.each( (index)->
@@ -102,6 +109,7 @@
       n = Math.floor(len/c.colnum)
       d = len % c.colnum
       offset = getPaddingLeftTop(c._target)
+      className = getClassName.call(@)
       c._items.each( (index)->
         colIndex = index % c.colnum
         colCurrentHeight[ colIndex ] = colCurrentHeight[ colIndex ] || 0
@@ -126,6 +134,8 @@
         else
           item.css(style)
         colCurrentHeight[ colIndex ] += clone.outerHeight() + diff + c.gutter
+        item.removeClass( className )
+        addEdgeClass.call(self, item, len, index, colIndex, cn)
       )
       c._target.height(max - c.gutter)
       c._clones.remove()
@@ -138,7 +148,26 @@
         top: '',
         left: '',
         margin: ''
-      )
+      ).removeClass( getClassName.call(@) )
+
+    getClassName = ->
+      className = @config.className
+      ary = []
+      for k, v of className
+        if typeof v != 'string' then continue
+        ary.push(v)
+      return ary.join(' ')
+
+    addEdgeClass = (item, len, index, col, clen)->
+      c = @config
+      cn = c.className
+      ary = []
+      cnum = Math.floor( index / c.colnum )
+      if col == 0 then ary.push( cn.edgeLeft )
+      if col == c.colnum - 1 then ary.push( cn.edgeRight )
+      if cnum == 0 then ary.push( cn.edgeTop )
+      if cnum == clen - 1 then ary.push( cn.edgeBottom )
+      if ary.length > 0 then item.addClass( ary.join(' ') )
 
     calcColHeights = ->
       c = @config

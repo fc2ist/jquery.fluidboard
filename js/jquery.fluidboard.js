@@ -1,4 +1,4 @@
-/*! jQuery Fluid Board - v1.0.0 - 2012-10-02
+/*! jQuery Fluid Board - v1.0.1 - 2012-10-02
 * Copyright (c) 2012 moi; Licensed MIT */
 
 
@@ -11,6 +11,12 @@
     resize: true,
     gutter: 10,
     throttle: 5,
+    className: {
+      edgeTop: 'edge-top',
+      edgeLeft: 'edge-left',
+      edgeRight: 'edge-right',
+      edgeBottom: 'edge-bottom'
+    },
     isAnimated: false,
     animationOptions: {
       duration: 200,
@@ -19,7 +25,7 @@
     }
   };
   Fluidboard = (function() {
-    var activate, addHeight, attach, bindEvents, calcColHeights, calcColWidths, detach, getClones, getItems, getPaddingLeftTop, getVarColnum, unbindEvents;
+    var activate, addEdgeClass, addHeight, attach, bindEvents, calcColHeights, calcColWidths, detach, getClassName, getClones, getItems, getPaddingLeftTop, getVarColnum, unbindEvents;
 
     function Fluidboard(target, config) {
       this.config = config;
@@ -125,7 +131,8 @@
     };
 
     attach = function() {
-      var c, colCurrentHeight, d, diffHeights, i, len, max, n, offset, _i, _j, _ref, _ref1;
+      var c, className, colCurrentHeight, d, diffHeights, i, len, max, n, offset, self, _i, _j, _ref, _ref1;
+      self = this;
       c = this.config;
       c._target.css('position', 'relative');
       c._clones.each(function(index) {
@@ -151,6 +158,7 @@
       n = Math.floor(len / c.colnum);
       d = len % c.colnum;
       offset = getPaddingLeftTop(c._target);
+      className = getClassName.call(this);
       c._items.each(function(index) {
         var clone, cn, colIndex, diff, item, left, style, _k;
         colIndex = index % c.colnum;
@@ -178,7 +186,9 @@
         } else {
           item.css(style);
         }
-        return colCurrentHeight[colIndex] += clone.outerHeight() + diff + c.gutter;
+        colCurrentHeight[colIndex] += clone.outerHeight() + diff + c.gutter;
+        item.removeClass(className);
+        return addEdgeClass.call(self, item, len, index, colIndex, cn);
       });
       c._target.height(max - c.gutter);
       return c._clones.remove();
@@ -192,7 +202,44 @@
         top: '',
         left: '',
         margin: ''
-      });
+      }).removeClass(getClassName.call(this));
+    };
+
+    getClassName = function() {
+      var ary, className, k, v;
+      className = this.config.className;
+      ary = [];
+      for (k in className) {
+        v = className[k];
+        if (typeof v !== 'string') {
+          continue;
+        }
+        ary.push(v);
+      }
+      return ary.join(' ');
+    };
+
+    addEdgeClass = function(item, len, index, col, clen) {
+      var ary, c, cn, cnum;
+      c = this.config;
+      cn = c.className;
+      ary = [];
+      cnum = Math.floor(index / c.colnum);
+      if (col === 0) {
+        ary.push(cn.edgeLeft);
+      }
+      if (col === c.colnum - 1) {
+        ary.push(cn.edgeRight);
+      }
+      if (cnum === 0) {
+        ary.push(cn.edgeTop);
+      }
+      if (cnum === clen - 1) {
+        ary.push(cn.edgeBottom);
+      }
+      if (ary.length > 0) {
+        return item.addClass(ary.join(' '));
+      }
     };
 
     calcColHeights = function() {
