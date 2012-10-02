@@ -6,6 +6,12 @@
     resize: true,
     gutter: 10,
     throttle: 5,
+    className: {
+      edgeTop: 'edge-top',
+      edgeLeft: 'edge-left',
+      edgeRight: 'edge-right',
+      edgeBottom: 'edge-bottom'
+    },
     isAnimated: false,
     animationOptions: {
       duration: 200,
@@ -13,11 +19,11 @@
       queue: false
     }
 
-  class Flipboard
+  class Fluidboard
     constructor:(target, @config)->
       @config._target = target
       @config._win = $(window)
-      Flipboard.stack = Flipboard.stack || {}
+      Fluidboard.stack = Fluidboard.stack || {}
       target.imagesLoaded( $.proxy(activate, @) )
 
     reload: ->
@@ -52,34 +58,35 @@
       self = @
       c = @config
       c._id = new Date().getTime()
-      Flipboard.stack[ c._id ] = {
+      Fluidboard.stack[ c._id ] = {
         elem: c._target,
         data: @
       }
-      Flipboard.event = Flipboard.event || false
-      if !Flipboard.event
-        Flipboard.event = true
+      Fluidboard.event = Fluidboard.event || false
+      if !Fluidboard.event
+        Fluidboard.event = true
         reload = ->
           reload.i = reload.i || 0
           if reload.i++ % c.throttle then return
-          for k, v of Flipboard.stack
+          for k, v of Fluidboard.stack
             if !v then continue
             v.elem.trigger('resize')
-        c._win.on( 'resize.flipboard', reload)
-      c._target.on( 'resize.flipboard', $.proxy(@reload, @) )
+        c._win.on( 'resize.fluidboard', reload)
+      c._target.on( 'resize.fluidboard', $.proxy(@reload, @) )
 
     unbindEvents = ->
       c = @config
-      Flipboard.stack[ c._id ] = null
+      Fluidboard.stack[ c._id ] = null
       f = false
-      for k, v of Flipboard.stack
+      for k, v of Fluidboard.stack
         if v then f = true
       if !f
-        Flipboard.event = false
-        c._win.off( 'resize.flipboard' )
-      c._target.off( 'resize.flipboard' )
+        Fluidboard.event = false
+        c._win.off( 'resize.fluidboard' )
+      c._target.off( 'resize.fluidboard' )
 
     attach = ->
+      self = @
       c = @config
       c._target.css('position', 'relative')
       c._clones.each( (index)->
@@ -102,6 +109,7 @@
       n = Math.floor(len/c.colnum)
       d = len % c.colnum
       offset = getPaddingLeftTop(c._target)
+      className = getClassName.call(@)
       c._items.each( (index)->
         colIndex = index % c.colnum
         colCurrentHeight[ colIndex ] = colCurrentHeight[ colIndex ] || 0
@@ -126,6 +134,8 @@
         else
           item.css(style)
         colCurrentHeight[ colIndex ] += clone.outerHeight() + diff + c.gutter
+        item.removeClass( className )
+        addEdgeClass.call(self, item, len, index, colIndex, cn)
       )
       c._target.height(max - c.gutter)
       c._clones.remove()
@@ -138,7 +148,26 @@
         top: '',
         left: '',
         margin: ''
-      )
+      ).removeClass( getClassName.call(@) )
+
+    getClassName = ->
+      className = @config.className
+      ary = []
+      for k, v of className
+        if typeof v != 'string' then continue
+        ary.push(v)
+      return ary.join(' ')
+
+    addEdgeClass = (item, len, index, col, clen)->
+      c = @config
+      cn = c.className
+      ary = []
+      cnum = Math.floor( index / c.colnum )
+      if col == 0 then ary.push( cn.edgeLeft )
+      if col == c.colnum - 1 then ary.push( cn.edgeRight )
+      if cnum == 0 then ary.push( cn.edgeTop )
+      if cnum == clen - 1 then ary.push( cn.edgeBottom )
+      if ary.length > 0 then item.addClass( ary.join(' ') )
 
     calcColHeights = ->
       c = @config
@@ -199,7 +228,7 @@
         left: left
       }
 
-  $.fn.flipboard = (opt)->
+  $.fn.fluidboard = (opt)->
     args = Array.prototype.slice.call(arguments)
     if args.length > 1 then args = Array.prototype.slice.call(arguments, 1)
     return this.each((n)->
@@ -207,7 +236,7 @@
       obj = $this.data(dataName)
       if !obj && typeof opt != 'string'
         if typeof opt != 'object' then opt = {}
-        $this.data(dataName, new Flipboard($this, $.extend(true, {}, default_settings, opt) ) )
+        $this.data(dataName, new Fluidboard($this, $.extend(true, {}, default_settings, opt) ) )
       else if !obj
         return false
       else if opt == 'reload'
@@ -218,4 +247,4 @@
       else if opt == 'option'
         obj.setOption.apply(obj, args)
     )
-)(jQuery, 'jquery-plugin-flipboard')
+)(jQuery, 'jquery-plugin-fluidboard')
