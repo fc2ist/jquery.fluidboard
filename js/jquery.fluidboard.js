@@ -12,10 +12,11 @@
     gutter: 10,
     throttle: 5,
     className: {
-      edgeTop: 'edge-top',
-      edgeLeft: 'edge-left',
-      edgeRight: 'edge-right',
-      edgeBottom: 'edge-bottom'
+      borderTop: 'border-top',
+      borderLeft: 'border-left',
+      borderRight: 'border-right',
+      borderBottom: 'border-bottom',
+      borderAll: 'border-all'
     },
     isAnimated: false,
     animationOptions: {
@@ -25,7 +26,7 @@
     }
   };
   Fluidboard = (function() {
-    var activate, addEdgeClass, addHeight, attach, bindEvents, calcColHeights, calcColWidths, detach, getClassName, getClones, getItems, getPaddingLeftTop, getVarColnum, unbindEvents;
+    var activate, addBorderClass, addHeight, attach, bindEvents, calcColHeights, calcColWidths, detach, getClassName, getClones, getItems, getPaddingLeftTop, getVarColnum, unbindEvents;
 
     function Fluidboard(target, config) {
       this.config = config;
@@ -188,7 +189,7 @@
         }
         colCurrentHeight[colIndex] += clone.outerHeight() + diff + c.gutter;
         item.removeClass(className);
-        return addEdgeClass.call(self, item, len, index, colIndex, cn);
+        return addBorderClass.call(self, item, len, index, colIndex, cn);
       });
       c._target.height(max - c.gutter);
       return c._clones.remove();
@@ -219,26 +220,28 @@
       return ary.join(' ');
     };
 
-    addEdgeClass = function(item, len, index, col, clen) {
+    addBorderClass = function(item, len, index, col, clen) {
       var ary, c, cn, cnum;
       c = this.config;
       cn = c.className;
       ary = [];
       cnum = Math.floor(index / c.colnum);
       if (col === 0) {
-        ary.push(cn.edgeLeft);
+        ary.push(cn.borderLeft);
       }
       if (col === c.colnum - 1) {
-        ary.push(cn.edgeRight);
+        ary.push(cn.borderRight);
       }
       if (cnum === 0) {
-        ary.push(cn.edgeTop);
+        ary.push(cn.borderTop);
       }
       if (cnum === clen - 1) {
-        ary.push(cn.edgeBottom);
+        ary.push(cn.borderBottom);
       }
       if (ary.length > 0) {
         return item.addClass(ary.join(' '));
+      } else {
+        return item.addClass(cn.borderAll);
       }
     };
 

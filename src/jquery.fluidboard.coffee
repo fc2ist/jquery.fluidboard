@@ -7,10 +7,11 @@
     gutter: 10,
     throttle: 5,
     className: {
-      edgeTop: 'edge-top',
-      edgeLeft: 'edge-left',
-      edgeRight: 'edge-right',
-      edgeBottom: 'edge-bottom'
+      borderTop: 'border-top',
+      borderLeft: 'border-left',
+      borderRight: 'border-right',
+      borderBottom: 'border-bottom',
+      borderAll: 'border-all'
     },
     isAnimated: false,
     animationOptions: {
@@ -135,7 +136,7 @@
           item.css(style)
         colCurrentHeight[ colIndex ] += clone.outerHeight() + diff + c.gutter
         item.removeClass( className )
-        addEdgeClass.call(self, item, len, index, colIndex, cn)
+        addBorderClass.call(self, item, len, index, colIndex, cn)
       )
       c._target.height(max - c.gutter)
       c._clones.remove()
@@ -158,16 +159,19 @@
         ary.push(v)
       return ary.join(' ')
 
-    addEdgeClass = (item, len, index, col, clen)->
+    addBorderClass = (item, len, index, col, clen)->
       c = @config
       cn = c.className
       ary = []
       cnum = Math.floor( index / c.colnum )
-      if col == 0 then ary.push( cn.edgeLeft )
-      if col == c.colnum - 1 then ary.push( cn.edgeRight )
-      if cnum == 0 then ary.push( cn.edgeTop )
-      if cnum == clen - 1 then ary.push( cn.edgeBottom )
-      if ary.length > 0 then item.addClass( ary.join(' ') )
+      if col == 0 then ary.push( cn.borderLeft )
+      if col == c.colnum - 1 then ary.push( cn.borderRight )
+      if cnum == 0 then ary.push( cn.borderTop )
+      if cnum == clen - 1 then ary.push( cn.borderBottom )
+      if ary.length > 0
+        item.addClass( ary.join(' ') )
+      else
+        item.addClass( cn.borderAll )
 
     calcColHeights = ->
       c = @config
