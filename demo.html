@@ -98,7 +98,7 @@
     	  , opt = $('#option');
       $('#attach').on('click', function(e) {
         e.preventDefault();
-        cont.eq(0).flipboard();
+        cont.eq(0).fluidboard();
         $(this).hide();
         $('#colnum4,#responsive,#reload').show();
         $('#destroy').show();
@@ -106,7 +106,7 @@
       }).trigger('click');
       $('#destroy').on('click', function(e) {
         e.preventDefault();
-        cont.eq(0).flipboard('destroy');
+        cont.eq(0).fluidboard('destroy');
         $(this).hide();
         $('#colnum4,#responsive,#reload').hide();
         $('#attach').show();
@@ -114,17 +114,17 @@
       });
       $('#reload').on('click', function(e) {
         e.preventDefault();
-        cont.eq(0).flipboard('reload');
+        cont.eq(0).fluidboard('reload');
         opt.text('reloaded');
       });
       $('#colnum4').on('click', function(e) {
         e.preventDefault();
-        cont.eq(0).flipboard('option', 'colnum', 4);
+        cont.eq(0).fluidboard('option', 'colnum', 4);
         opt.text('changed options to { colnum: 4 }');
       });
       $('#responsive').on('click', function(e) {
         e.preventDefault();
-        cont.eq(0).flipboard('option', 'responsive', 400);
+        cont.eq(0).fluidboard('option', 'responsive', 400);
         opt.text('changed options to { responsive: 400 }');
       });
   	});

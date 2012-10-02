@@ -1,9 +1,9 @@
-/*! jQuery Fluid Board - v1.0.0 - 2012-09-28
+/*! jQuery Fluid Board - v1.0.0 - 2012-10-02
 * Copyright (c) 2012 moi; Licensed MIT */
 
 
 (function($, dataName) {
-  var Flipboard, default_settings;
+  var Fluidboard, default_settings;
   default_settings = {
     colnum: 2,
     itemSelector: null,
@@ -18,22 +18,22 @@
       queue: false
     }
   };
-  Flipboard = (function() {
+  Fluidboard = (function() {
     var activate, addHeight, attach, bindEvents, calcColHeights, calcColWidths, detach, getClones, getItems, getPaddingLeftTop, getVarColnum, unbindEvents;
 
-    function Flipboard(target, config) {
+    function Fluidboard(target, config) {
       this.config = config;
       this.config._target = target;
       this.config._win = $(window);
-      Flipboard.stack = Flipboard.stack || {};
+      Fluidboard.stack = Fluidboard.stack || {};
       target.imagesLoaded($.proxy(activate, this));
     }
 
-    Flipboard.prototype.reload = function() {
+    Fluidboard.prototype.reload = function() {
       return this.config._target.imagesLoaded($.proxy(activate, this, true));
     };
 
-    Flipboard.prototype.destroy = function() {
+    Fluidboard.prototype.destroy = function() {
       var c;
       c = this.config;
       unbindEvents.call(this);
@@ -41,7 +41,7 @@
       return c._target.removeData(dataName);
     };
 
-    Flipboard.prototype.setOption = function(opt, value) {
+    Fluidboard.prototype.setOption = function(opt, value) {
       var obj;
       if (typeof opt === 'string' && value) {
         obj = {};
@@ -76,20 +76,20 @@
       self = this;
       c = this.config;
       c._id = new Date().getTime();
-      Flipboard.stack[c._id] = {
+      Fluidboard.stack[c._id] = {
         elem: c._target,
         data: this
       };
-      Flipboard.event = Flipboard.event || false;
-      if (!Flipboard.event) {
-        Flipboard.event = true;
+      Fluidboard.event = Fluidboard.event || false;
+      if (!Fluidboard.event) {
+        Fluidboard.event = true;
         reload = function() {
           var k, v, _ref, _results;
           reload.i = reload.i || 0;
           if (reload.i++ % c.throttle) {
             return;
           }
-          _ref = Flipboard.stack;
+          _ref = Fluidboard.stack;
           _results = [];
           for (k in _ref) {
             v = _ref[k];
@@ -100,17 +100,17 @@
           }
           return _results;
         };
-        c._win.on('resize.flipboard', reload);
+        c._win.on('resize.fluidboard', reload);
       }
-      return c._target.on('resize.flipboard', $.proxy(this.reload, this));
+      return c._target.on('resize.fluidboard', $.proxy(this.reload, this));
     };
 
     unbindEvents = function() {
       var c, f, k, v, _ref;
       c = this.config;
-      Flipboard.stack[c._id] = null;
+      Fluidboard.stack[c._id] = null;
       f = false;
-      _ref = Flipboard.stack;
+      _ref = Fluidboard.stack;
       for (k in _ref) {
         v = _ref[k];
         if (v) {
@@ -118,10 +118,10 @@
         }
       }
       if (!f) {
-        Flipboard.event = false;
-        c._win.off('resize.flipboard');
+        Fluidboard.event = false;
+        c._win.off('resize.fluidboard');
       }
-      return c._target.off('resize.flipboard');
+      return c._target.off('resize.fluidboard');
     };
 
     attach = function() {
@@ -281,10 +281,10 @@
       };
     };
 
-    return Flipboard;
+    return Fluidboard;
 
   })();
-  return $.fn.flipboard = function(opt) {
+  return $.fn.fluidboard = function(opt) {
     var args;
     args = Array.prototype.slice.call(arguments);
     if (args.length > 1) {
@@ -298,7 +298,7 @@
         if (typeof opt !== 'object') {
           opt = {};
         }
-        return $this.data(dataName, new Flipboard($this, $.extend(true, {}, default_settings, opt)));
+        return $this.data(dataName, new Fluidboard($this, $.extend(true, {}, default_settings, opt)));
       } else if (!obj) {
         return false;
       } else if (opt === 'reload') {
@@ -311,7 +311,7 @@
       }
     });
   };
-})(jQuery, 'jquery-plugin-flipboard');
+})(jQuery, 'jquery-plugin-fluidboard');
 
 /*!
  * jQuery imagesLoaded plugin v2.0.1
